@@ -1,0 +1,67 @@
+# ============================================================
+# GitOps-Time-Machine — Configuration
+# ============================================================
+
+# Kubernetes connection
+kubeconfig: "~/.kube/config"
+context: ""  # empty = current context
+
+# Snapshot settings
+snapshot:
+  # Directory to store infrastructure snapshots (Git repo)
+  output_dir: "./infra-snapshots"
+  
+  # Resource types to capture (empty = all discoverable resources)
+  resource_types:
+    - deployments
+    - services
+    - configmaps
+    - secrets
+    - ingresses
+    - statefulsets
+    - daemonsets
+    - cronjobs
+    - persistentvolumeclaims
+    - networkpolicies
+    - serviceaccounts
+    - roles
+    - rolebindings
+    - clusterroles
+    - clusterrolebindings
+  
+  # Namespaces to include (empty = all namespaces)
+  namespaces: []
+  
+  # Namespaces to exclude
+  exclude_namespaces:
+    - kube-system
+    - kube-public
+    - kube-node-lease
+  
+  # Fields to strip from captured resources
+  strip_fields:
+    - ".metadata.managedFields"
+    - ".metadata.resourceVersion"
+    - ".metadata.uid"
+    - ".metadata.generation"
+    - ".status"
+
+# Git settings for the snapshot repository
+git:
+  author_name: "GitOps-Time-Machine"
+  author_email: "gitops-tm@automated"
+  commit_message_prefix: "[snapshot]"
+  branch: "main"
+
+# Watch/schedule settings
+watch:
+  # Cron expression for scheduled snapshots
+  schedule: "*/5 * * * *"  # every 5 minutes
+  
+  # Enable real-time Kubernetes watch events
+  enable_watch_events: false
+
+# Logging
+log:
+  level: "info"      # debug, info, warn, error
+  format: "text"     # text, json
